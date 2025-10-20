@@ -23,7 +23,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const DEFAULT_AVATAR_IMAGE = require('../../assets/images/avatar.png');
 
 const UserListView = () => {
-  // ... (This component is correct and remains unchanged)
   const colors = useTheme();
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
     useChatStore();
@@ -113,7 +112,6 @@ const UserListView = () => {
 };
 
 const UserItem = ({ user, onSelect, isSelected, isOnline }) => {
-  // ... (This component is correct and remains unchanged)
   const colors = useTheme();
   const imageSource = user.profilePic
     ? { uri: user.profilePic }
@@ -222,7 +220,6 @@ const ChatView = () => {
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          // --- FIX #1: Increased the offset to account for the tab bar ---
           keyboardVerticalOffset={100}
         >
           <View style={[styles.header, { borderBottomColor: `${colors.neutral}22` }]}>
@@ -242,7 +239,6 @@ const ChatView = () => {
           ) : (
             <FlatList
               ref={flatListRef}
-              // --- FIX #2: Reverse the messages array for correct order ---
               data={[...messages].reverse()}
               keyExtractor={(item) => item._id}
               renderItem={({ item }) => (
@@ -281,7 +277,6 @@ const ChatView = () => {
 };
 
 const MessageBubble = ({ message, isOwnMessage, onDelete }) => {
-    // ... (This component is correct and remains unchanged) ...
     const colors = useTheme();
     const bubbleStyle = isOwnMessage
       ? [styles.messageBubble, styles.ownMessage, { backgroundColor: colors.primary }]
@@ -324,7 +319,6 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  // ... (All styles are correct and remain unchanged) ...
   container: {
     flex: 1,
   },

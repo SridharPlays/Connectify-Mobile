@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Stack, router } from 'expo-router';
 import { useAuthStore } from '../store/useAuthStore.js';
 import Toast from 'react-native-toast-message';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import SplashScreen from '../components/SplashScreen';
 
 export default function RootLayout() {
