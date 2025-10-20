@@ -1,26 +1,25 @@
-import React, { useEffect, useState, useRef } from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  ActivityIndicator,
-  Switch,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  BackHandler,
-  Alert,
-} from 'react-native';
-import { useChatStore } from '../../store/useChatStore';
-import { useAuthStore } from '../../store/useAuthStore';
-import { useTheme } from '../../store/useThemeStore';
-import { Users, ArrowLeft, Send } from 'lucide-react-native';
+import { ArrowLeft, Send, Users } from 'lucide-react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, BackHandler, FlatList, Image, KeyboardAvoidingView, Platform, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuthStore } from '../../store/useAuthStore';
+import { useChatStore } from '../../store/useChatStore';
+import { useTheme } from '../../store/useThemeStore';
 
 const DEFAULT_AVATAR_IMAGE = require('../../assets/images/avatar.png');
+
+type User = {
+  _id: string;
+  fullName: string;
+  profilePic?: string;
+};
+
+type UserItemProps = {
+  user: User;
+  onSelect: (user: User) => void;
+  isSelected: boolean;
+  isOnline: boolean;
+};
 
 const UserListView = () => {
   const colors = useTheme();
@@ -33,11 +32,14 @@ const UserListView = () => {
     getUsers();
   }, [getUsers]);
 
-  const otherUsers = users.filter((user) => user._id !== authUser?._id);
+  const safeUsers = Array.isArray(users) ? users : [];
+  const safeOnlineUsers = Array.isArray(onlineUsers) ? onlineUsers : [];
+
+  const otherUsers = safeUsers.filter((user) => user._id !== authUser?._id);
   const filteredUsers = showOnlineOnly
-    ? otherUsers.filter((user) => onlineUsers.includes(user._id))
+    ? otherUsers.filter((user) => safeOnlineUsers.includes(user._id))
     : otherUsers;
-  const onlineCount = onlineUsers.filter((id) => id !== authUser?._id).length;
+  const onlineCount = safeOnlineUsers.filter((id) => id !== authUser?._id).length;
 
   if (isUsersLoading) {
     return (
@@ -91,7 +93,7 @@ const UserListView = () => {
             user={item}
             onSelect={setSelectedUser}
             isSelected={selectedUser?._id === item._id}
-            isOnline={onlineUsers.includes(item._id)}
+            isOnline={safeOnlineUsers.includes(item._id)}
           />
         )}
         ListEmptyComponent={
@@ -111,7 +113,7 @@ const UserListView = () => {
   );
 };
 
-const UserItem = ({ user, onSelect, isSelected, isOnline }) => {
+const UserItem: React.FC<UserItemProps> = ({ user, onSelect, isSelected, isOnline }) => {
   const colors = useTheme();
   const imageSource = user.profilePic
     ? { uri: user.profilePic }
@@ -194,7 +196,7 @@ const ChatView = () => {
         listenForDeletedMessages
     ]);
 
-    const handleDelete = (messageId) => {
+    const handleDelete = (messageId: string) => {
         Alert.alert(
             "Delete Message",
             "Are you sure you want to delete this message?",
@@ -276,7 +278,22 @@ const ChatView = () => {
     );
 };
 
-const MessageBubble = ({ message, isOwnMessage, onDelete }) => {
+type Message = {
+    _id: string;
+    text?: string;
+    image?: string;
+    senderId: string;
+    isDeleted?: boolean;
+};
+
+type MessageBubbleProps = {
+    message: Message;
+    isOwnMessage: boolean;
+    onDelete: (messageId: string) => void;
+};
+
+
+const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwnMessage, onDelete }) => {
     const colors = useTheme();
     const bubbleStyle = isOwnMessage
       ? [styles.messageBubble, styles.ownMessage, { backgroundColor: colors.primary }]
@@ -307,7 +324,7 @@ const MessageBubble = ({ message, isOwnMessage, onDelete }) => {
         activeOpacity={0.7}
       >
         <View style={bubbleStyle}>
-          <Text style={textStyle}>{message.text}</Text>
+          {message.text && <Text style={textStyle}>{message.text}</Text>}
         </View>
       </TouchableOpacity>
     );

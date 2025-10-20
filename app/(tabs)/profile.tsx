@@ -1,24 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  ActivityIndicator,
-  Alert,
-} from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { router } from 'expo-router';
+import { Camera, LogOut } from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useTheme } from '../../store/useThemeStore';
-import { Camera, LogOut } from 'lucide-react-native';
-import * as ImagePicker from 'expo-image-picker';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
 
 const DEFAULT_AVATAR_IMAGE = require('../../assets/images/avatar.png');
 
-const InfoField = ({ label, value, themeColors }) => {
+type ThemeColors = {
+  primary: string;
+  secondary: string;
+  accent: string;
+  neutral: string;
+  'base-100': string;
+  'base-content': string;
+};
+
+type InfoFieldProps = {
+  label: string;
+  value: string | undefined | null;
+  themeColors: ThemeColors;
+};
+
+const InfoField: React.FC<InfoFieldProps> = ({ label, value, themeColors }) => {
   return (
     <View style={styles.fieldContainer}>
       <Text style={[styles.label, { color: `${themeColors['base-content']}80` }]}>
@@ -34,7 +40,7 @@ const InfoField = ({ label, value, themeColors }) => {
         ]}
       >
         <Text style={[styles.value, { color: themeColors['base-content'] }]}>
-          {value}
+          {value || ''}
         </Text>
       </View>
     </View>
@@ -43,7 +49,7 @@ const InfoField = ({ label, value, themeColors }) => {
 
 export default function ProfileScreen() {
   const { authUser, logout, updateProfile, isUpdatingProfile } = useAuthStore();
-  const colors = useTheme();
+  const colors: ThemeColors = useTheme();
   const [memberSince, setMemberSince] = useState('');
 
   useEffect(() => {
@@ -77,12 +83,12 @@ export default function ProfileScreen() {
           text: "Cancel",
           style: "cancel"
         },
-        { 
-          text: "OK", 
+        {
+          text: "OK",
           onPress: () => {
             logout();
             router.replace('/login');
-          } 
+          }
         }
       ]
     );
@@ -100,7 +106,7 @@ export default function ProfileScreen() {
   const statusBadge = { backgroundColor: '#2ecc7133', borderColor: '#2ecc71' };
   const statusText = { color: '#2ecc71' };
   const logoutButton = { backgroundColor: colors.primary };
-  const logoutButtonText = { color: colors['base-content'] };
+  const logoutButtonText = { color: colors['base-content'] || '#FFFFFF' };
 
   return (
     <SafeAreaView style={[styles.container, containerStyle]}>
@@ -162,7 +168,6 @@ export default function ProfileScreen() {
           </Text>
         </View>
 
-        {/* 4. Use the new handler in the onPress prop */}
         <TouchableOpacity
           style={[styles.logoutButton, logoutButton]}
           onPress={handleLogout}
@@ -242,4 +247,3 @@ const styles = StyleSheet.create({
   },
   logoutButtonText: { fontSize: 16, fontWeight: 'bold' },
 });
-

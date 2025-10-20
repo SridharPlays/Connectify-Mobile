@@ -1,17 +1,9 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-  Alert,
-} from 'react-native';
 import { Link } from 'expo-router';
+import React, { useState } from 'react';
+import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useTheme } from '../../store/useThemeStore';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -81,7 +73,7 @@ const LoginScreen = () => {
 
       <View style={styles.footer}>
         <Text style={[styles.footerText, footerTextStyle]}>
-          Don't have an account?{' '}
+          {"Don\u2019t have an account? "}
         </Text>
         <Link href="/signup" asChild>
           <TouchableOpacity>

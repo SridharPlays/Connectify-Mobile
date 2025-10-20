@@ -1,17 +1,33 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Check } from 'lucide-react-native';
 import { useThemeStore, useTheme } from '../../store/useThemeStore';
 import { themes } from '../../theme/themes';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const ThemeCard = ({ theme, isSelected, onSelect, themeColors }) => {
+type ThemeColors = {
+  primary: string;
+  secondary: string;
+  accent: string;
+  neutral: string;
+  'base-100': string;
+  'base-content': string;
+  [key: string]: string;
+};
+
+type Theme = {
+  name: string;
+  colors: ThemeColors;
+};
+
+type ThemeCardProps = {
+  theme: Theme;
+  isSelected: boolean;
+  onSelect: (themeName: string) => void;
+  themeColors: ThemeColors;
+};
+
+const ThemeCard: React.FC<ThemeCardProps> = ({ theme, isSelected, onSelect, themeColors }) => {
   const colors = Object.values(theme.colors);
 
   const cardStyle = {
@@ -164,3 +180,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
+

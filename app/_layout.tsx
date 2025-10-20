@@ -1,16 +1,28 @@
-import React, { useEffect } from 'react';
 import { Stack, router } from 'expo-router';
-import { useAuthStore } from '../store/useAuthStore.js';
+import React, { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 import Toast from 'react-native-toast-message';
-import { View, StyleSheet } from 'react-native';
 import SplashScreen from '../components/SplashScreen';
+import { useAuthStore } from '../store/useAuthStore.js';
+
+type User = {
+  _id: string;
+  fullName: string;
+  email: string;
+};
+
+interface AuthStoreState {
+  authUser: User | null;
+  isCheckingAuth: boolean;
+  checkAuth: () => void;
+}
 
 export default function RootLayout() {
-  const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
+  const { authUser, isCheckingAuth, checkAuth } = useAuthStore() as AuthStoreState;
 
   useEffect(() => {
     checkAuth();
-  }, []);
+  }, [checkAuth]);
 
   useEffect(() => {
     if (isCheckingAuth) {
@@ -41,3 +53,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
