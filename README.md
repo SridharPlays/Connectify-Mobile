@@ -92,9 +92,9 @@ This project uses EAS (Expo Application Services) to build installable app packa
     Before building, set your production backend URLs as EAS environment variables (Secrets).
 
     ```sh
-    # Replace the URLs with your actual deployed backend URLs
-    eas env:create --scope project --name EXPO_PUBLIC_API_URL --value [https://connectify-chatapp.onrender.com/api](https://connectify-chatapp.onrender.com/api) --visibility sensitive
-    eas env:create --scope project --name EXPO_PUBLIC_SOCKET_URL --value [https://connectify-chatapp.onrender.com](https://connectify-chatapp.onrender.com) --visibility sensitive
+    # Replace the URL with your actual deployed backend URL
+    eas env:create --scope project --name EXPO_PUBLIC_API_URL --value <YOUR_PRODUCTION_URL> --visibility sensitive
+    eas env:create --scope project --name EXPO_PUBLIC_SOCKET_URL --value <YOUR_PRODUCTION_URL> --visibility sensitive
     ```
 
 4. **Start the Build:**
